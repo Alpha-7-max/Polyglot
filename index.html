@@ -129,28 +129,35 @@
         }
 
         .lang-option label {
-            display: inline-block;
-            padding: 0.625rem 1.125rem; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
             border: 1px solid var(--app-border-gray);
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-            font-size: 0.9375rem; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9375rem;
             font-weight: 500;
-            color: #3c4043;
+            color: #1f2937;
             background-color: var(--pure-white);
-            line-height: 1.4;
+            line-height: 1.5;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
         .lang-option label:hover {
-            background-color: var(--app-hover-bg-gray); 
+            background-color: #f3f4f6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
         }
         .lang-option input[type="radio"]:checked + label {
-            background-color: var(--app-blue-light-bg); 
-            border-color: var(--app-blue-base);      
-            color: var(--app-blue-text-on-selected); 
+            background-color: var(--app-blue-light-bg);
+            border-color: var(--app-blue-base);
+            color: var(--app-blue-text-on-selected);
+            box-shadow: 0 0 0 1px var(--app-blue-base);
         }
-         .lang-option input[type="radio"]:focus-visible + label {
-            outline: none;
+        .lang-option input[type="radio"]:focus-visible + label {
+            outline: 1px solid var(--app-blue-focus-ring);
+            outline-offset: 1px;
         }
 
         .translate-action-button {
