@@ -3,42 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini Text Translator - Google Style</title>
+    <title>Spark</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --app-blue-base: #3b82f6;    
+            --app-blue-hover: #2563eb;   
+            --app-blue-active: #1d4ed8;  
+            --app-blue-focus-ring: #93c5fd; 
+            --app-blue-text-on-selected: #1e40af; 
+            --app-blue-light-bg: #eff6ff; 
+            --app-blue-50: #eff6ff; 
+            --app-blue-100: #dbeafe; 
+            
+            --sky-selection-bg: #7dd3fc; 
+            --sky-selection-text: #082f49; 
+
+            --app-body-bg: #f1f5f9; 
+            --app-disabled-bg-gray: #e5e7eb; 
+            --app-disabled-text-gray: #9ca3af; 
+            --app-hover-bg-gray: #e5e7eb; 
+            --app-border-gray: #d1d5db; 
+            --copy-button-border-copied: #475569; 
+            --pure-white: #ffffff;
+            --placeholder-text-color: #9ca3af; 
+            --slate-200: #e2e8f0; 
+            --slate-50: #f8fafc;  
+            --heading-text-color: #1e293b; 
+        }
+
         body {
-            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
-            background-color: #f0f2f5; /* Light gray background (Tailwind gray-100/200) */
+            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif; 
+            background-color: var(--app-body-bg); 
         }
 
-        .translator-container {
-            background-color: #ffffff; /* White card */
-            border-radius: 8px; /* Google's typical border-radius */
-            border: 1px solid #dadce0; /* Border for definition */
+        .page-container { 
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem; 
         }
 
-        .text-area-common {
-            border: 1px solid #dadce0; /* Google's input border color */
-            border-radius: 6px; /* Slightly softer radius */
-            min-height: 140px;
-            padding: 12px 16px;
-            font-size: 16px; /* Common Google input font size */
-            line-height: 1.5;
-            color: #202124; /* Google's primary text color */
-            resize: vertical;
+
+        ::selection {
+            background-color: var(--sky-selection-bg);
+            color: var(--sky-selection-text);
         }
-        .text-area-common:focus {
-            border-color: #1a73e8; /* Google Blue */
-            box-shadow: 0 0 0 1px #1a73e8; /* Focus ring */
+        ::-moz-selection { 
+            background-color: var(--sky-selection-bg);
+            color: var(--sky-selection-text);
+        }
+
+        .translator-card { 
+            background-color: var(--pure-white);
+            border-radius: 8px; 
+            border: 1px solid var(--app-border-gray); 
+        }
+
+        .text-io-box { 
+            border: 1px solid var(--app-border-gray);
+            border-radius: 6px;
+            min-height: 180px; 
+            padding: 1rem;    
+            font-size: 1.125rem;  
+            line-height: 1.6;     
+            color: #202124;
+            resize: vertical; 
+        }
+
+        .input-textarea {
+            background-color: var(--pure-white); 
+        }
+        .input-textarea:focus {
+            border-color: var(--app-blue-base); 
+            box-shadow: 0 0 0 1px var(--app-blue-base); 
             outline: none;
         }
-        .text-area-common::placeholder {
-            color: #5f6368; /* Google placeholder text color */
+        .input-textarea::placeholder {
+            color: var(--placeholder-text-color);
+            font-size: 1.125rem; 
         }
-        #outputText {
-             background-color: #f8f9fa; /* Slightly off-white for output, Google style */
-             padding-right: 40px; /* Make space for the copy button */
+        
+        .output-box {
+            background-color: var(--slate-50); 
+            color: #334155; 
+        }
+        .output-box.is-placeholder {
+            color: var(--placeholder-text-color); 
+            font-size: 1.125rem; 
+        }
+        .output-box.is-processing {
+            background-color: var(--app-blue-50);
+            opacity: 0.5; 
+            border-color: var(--app-blue-100);
         }
 
 
@@ -51,61 +113,69 @@
 
         .lang-option label {
             display: inline-block;
-            padding: 8px 16px;
-            border: 1px solid #dadce0;
+            padding: 0.625rem 1.125rem; 
+            border: 1px solid var(--app-border-gray);
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-            font-size: 14px;
+            font-size: 0.9375rem; 
             font-weight: 500;
             color: #3c4043;
-            background-color: #ffffff;
+            background-color: var(--pure-white);
             line-height: 1.4;
         }
         .lang-option label:hover {
-            background-color: #f1f3f4;
-            border-color: #c6c6c6;
+            background-color: var(--app-hover-bg-gray); 
         }
         .lang-option input[type="radio"]:checked + label {
-            background-color: #e8f0fe;
-            border-color: #1a73e8;
-            color: #1967d2;
+            background-color: var(--app-blue-light-bg); 
+            border-color: var(--app-blue-base);      
+            color: var(--app-blue-text-on-selected); 
         }
          .lang-option input[type="radio"]:focus-visible + label {
-            outline: 2px solid #1a73e8;
+            outline: 2px solid var(--app-blue-base); 
             outline-offset: 1px;
         }
 
-
         .translate-action-button {
-            background-color: #1a73e8; /* Google Blue */
+            background-color: var(--app-blue-base); 
             color: white;
             font-weight: 500;
-            padding: 10px 24px;
+            padding: 0.75rem 1.75rem; 
             border-radius: 4px;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 1px 2px 0 rgba(26,115,232,0.3), 0 1px 3px 1px rgba(26,115,232,0.15);
+            transition: background-color 0.2s ease, opacity 0.2s ease; 
             border: none;
-            font-size: 14px;
+            font-size: 0.9375rem; 
         }
-        .translate-action-button:hover {
-            background-color: #185abc;
-            box-shadow: 0 1px 3px 0 rgba(26,115,232,0.3), 0 2px 6px 2px rgba(26,115,232,0.15);
+        .translate-action-button:hover:not(:disabled) { 
+            background-color: rgba(var(--app-blue-base-rgb, 59, 130, 246), 0.9); 
         }
-        .translate-action-button:active {
-             background-color: #174ea6;
-             box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        .translate-action-button:active:not(:disabled) { 
+             background-color: var(--app-blue-active); 
+        }
+        .translate-action-button:focus-visible {
+            outline: 2px solid var(--app-blue-focus-ring); 
+            outline-offset: 2px;
         }
         .translate-action-button:disabled {
-            background-color: #f1f3f4;
-            color: #bdc1c6;
+            background-color: var(--app-disabled-bg-gray); 
+            color: var(--app-disabled-text-gray); 
             cursor: not-allowed;
-            box-shadow: none;
+            opacity: 0.7; 
+        }
+        .translate-action-button.is-loading {
+            animation: subtlePulse 1.5s infinite ease-in-out;
+            cursor: wait; 
+        }
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0.6; }
         }
 
-        .loader-spinner-blue {
-            border: 3px solid rgba(26, 115, 232, 0.2); /* Lighter blue for track */
-            border-top: 3px solid #ffffff; /* White spinner for contrast on blue button */
+
+        .loader-spinner-blue { 
+            border: 3px solid rgba(255, 255, 255, 0.3); 
+            border-top: 3px solid #ffffff; 
             border-radius: 50%;
             width: 18px;
             height: 18px;
@@ -134,154 +204,278 @@
         .error-banner p {
             color: #5c3b3a;
         }
-
-        .app-header {
-            border-bottom: 1px solid #dadce0; /* Google's standard separator */
-            padding: 12px 24px;
-        }
-        .app-header h1 {
-            font-size: 20px;
-            color: #3c4043;
-            font-weight: 500;
-            line-height: 1.6;
-        }
-        .app-header .logo-icon {
-            color: #1a73e8; /* Google Blue */
-            margin-right: 10px;
-            font-size: 22px;
-        }
+        
         #copyButton {
-            /* Styles are applied via Tailwind classes */
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out, opacity 0.2s ease-in-out;
+            font-size: 0.9375rem; 
+            padding: 0.375rem 0.75rem; 
         }
-        #copyButton i {
-            display: block;
+        #copyButton:hover:not(:disabled) {
+            background-color: #f8fafc; 
+            border-color: #cbd5e1; 
         }
+        #copyButton:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        #copyButton:focus-visible {
+             outline: 2px solid var(--app-blue-focus-ring); 
+             outline-offset: 1px;
+        }
+        #copyButton.is-copied {
+            border-color: var(--copy-button-border-copied); 
+        }
+        #copyButtonIconContainer i {
+            font-size: 1rem; 
+            line-height: 1; 
+            vertical-align: middle; 
+        }
+
+        .clear-input-button {
+            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+            font-size: 0.875rem; 
+            padding: 0.25rem 0.5rem; 
+        }
+        .clear-input-button:hover:not(:disabled) {
+            background-color: var(--app-hover-bg-gray);
+            color: #dc2626; 
+        }
+        .clear-input-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .app-footer p {
+            font-size: 0.875rem; 
+        }
+        .page-main-title {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif; 
+            font-size: 2.25rem; 
+            font-weight: 700; 
+            color: var(--heading-text-color); 
+            line-height: 1.2;
+            text-align: center;
+            margin-bottom: 2rem; 
+        }
+        .page-main-title .logo-icon {
+            color: var(--app-blue-base); 
+            margin-right: 0.75rem; 
+            font-size: 2.25rem; 
+            vertical-align: middle;
+        }
+
 
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-3 md:p-4 selection:bg-blue-100 selection:text-blue-700">
+<body class="flex flex-col items-center min-h-screen pt-8 pb-8 px-4">
 
-    <div class="translator-container w-full max-w-xl md:max-w-2xl my-4">
-        <header class="app-header flex items-center">
-            <i class="fas fa-language logo-icon"></i>
-            <h1>Polyglot AI Translator</h1>
-        </header>
+    <h1 class="page-main-title">
+        <i class="fas fa-language logo-icon"></i>Spark
+    </h1>
 
-        <div class="p-5 md:p-6 space-y-5">
-            <div>
-                <label for="inputText" class="block text-xs font-medium text-gray-600 mb-1 uppercase tracking-wider">Enter text (Press Enter to translate, Shift+Enter for new line)</label>
-                <textarea id="inputText" rows="5" class="w-full text-area-common" placeholder="Type or paste text here..."></textarea>
-            </div>
-
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-1">
-                <div class="flex flex-col w-full sm:w-auto">
-                    <p class="block text-xs font-medium text-gray-600 mb-1.5 uppercase tracking-wider">Translate to</p>
-                    <div class="flex space-x-2">
-                        <div class="lang-option">
-                            <input type="radio" name="targetLanguage" id="langEnglish" value="English" checked>
-                            <label for="langEnglish">English</label>
-                        </div>
-                        <div class="lang-option">
-                            <input type="radio" name="targetLanguage" id="langRomanUrdu" value="Roman Urdu">
-                            <label for="langRomanUrdu">Roman Urdu</label>
-                        </div>
+    <div class="page-container w-full">
+        <div class="translator-card w-full max-w-3xl mx-auto p-6">
+            <div class="space-y-6">
+                <div>
+                    <div class="flex justify-end items-center mb-2">
+                        <button id="clearInputButton" title="Clear input text" class="clear-input-button rounded-md text-gray-500 focus:outline-none font-medium">
+                            <i class="fas fa-times mr-1"></i>Clear
+                        </button>
                     </div>
+                    <textarea id="inputText" rows="5" class="w-full input-textarea text-io-box resize-none rounded-md" placeholder="Type or paste text here..."></textarea>
                 </div>
-                
-                <button id="translateButton" class="translate-action-button w-full sm:w-auto flex items-center justify-center mt-2 sm:mt-0 self-end sm:self-center">
-                    <i class="fas fa-exchange-alt mr-2 opacity-90"></i>
-                    <span id="translateButtonText">Translate</span>
-                    <div id="loader" class="loader-spinner-blue hidden ml-2"></div>
-                </button>
-            </div>
 
-            <div>
-                <label for="outputText" class="block text-xs font-medium text-gray-600 mb-1 uppercase tracking-wider">Translation</label>
-                <div id="outputTextContainer" class="relative">
-                    <div id="outputText" class="w-full text-area-common text-gray-700 whitespace-pre-wrap break-words">
-                        {/* <!-- Translated text will appear here --> */}
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-1">
+                    <div class="flex flex-col w-full sm:w-auto">
+                        <div class="flex space-x-2">
+                            <div class="lang-option">
+                                <input type="radio" name="targetLanguage" id="langEnglish" value="English" checked>
+                                <label for="langEnglish">English</label>
+                            </div>
+                            <div class="lang-option">
+                                <input type="radio" name="targetLanguage" id="langRomanUrdu" value="Roman Urdu">
+                                <label for="langRomanUrdu">Roman Urdu</label>
+                            </div>
+                        </div>
                     </div>
-                    <button id="copyButton" title="Copy to clipboard" class="absolute top-2 right-2 p-1.5 rounded text-gray-500 hover:text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 transition-all duration-150 hidden">
-                         <i class="far fa-copy fa-fw text-base"></i>
+                    
+                    <button id="translateButton" class="translate-action-button w-full sm:w-auto flex items-center justify-center mt-3 sm:mt-0 self-stretch sm:self-center">
+                        <i class="fas fa-exchange-alt mr-2 opacity-90"></i>
+                        <span id="translateButtonText">Translate</span>
+                        <div id="loader" class="loader-spinner-blue hidden ml-2"></div>
                     </button>
                 </div>
-            </div>
 
-            <div id="errorMessage" class="error-banner p-3 hidden" role="alert">
-                <div class="flex">
-                    <div class="flex-shrink-0 pt-0.5">
-                        <i class="fas fa-exclamation-circle fa-md icon"></i>
+                <section>
+                    <div class="flex justify-end items-center mb-2">
+                        <button id="copyButton" title="Copy to clipboard" 
+                                class="flex items-center rounded-md border border-slate-300 bg-white text-slate-700 font-medium focus:outline-none"> 
+                            <span id="copyButtonIconContainer" class="mr-1.5">
+                                <i class="far fa-copy"></i>
+                            </span>
+                            <span id="copyButtonTextContainer">Copy</span>
+                        </button>
                     </div>
-                    <div class="ml-2.5">
-                        <h3 class="text-sm font-bold">Translation Error</h3>
-                        <p id="errorMessageText" class="text-sm mt-0.5">Error messages will appear here.</p>
+                    <div 
+                        id="outputText"
+                        class="output-box text-io-box w-full text-slate-800 shadow-sm rounded-md overflow-y-auto whitespace-pre-wrap" 
+                        aria-live="polite" 
+                        aria-label="Translated text output area"
+                        readonly>
+                    </div>
+                </section>
+
+
+                <div id="errorMessage" class="error-banner p-3 hidden rounded-md" role="alert">
+                    <div class="flex">
+                        <div class="flex-shrink-0 pt-0.5">
+                            <i class="fas fa-exclamation-circle fa-md icon"></i>
+                        </div>
+                        <div class="ml-2.5">
+                            <h3 class="text-sm font-bold text-red-700">Translation Error</h3>
+                            <p id="errorMessageText" class="text-sm text-red-600 mt-1">Error messages will appear here.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="text-center mt-6 mb-4">
-        <p class="text-xs text-gray-500">Powered by Google Gemini. Model: <span class="font-medium text-gray-600" id="modelNameDisplay">gemini-2.0-flash</span>.</p>
+    <footer class="text-center my-8 app-footer">
+        <p class="text-gray-500">Powered by Gemini.</p>
     </footer>
 
     <script>
         const inputTextElem = document.getElementById('inputText');
         const outputTextElem = document.getElementById('outputText');
-        const copyButton = document.getElementById('copyButton');
+        const clearInputButton = document.getElementById('clearInputButton');
+        const copyButton = document.getElementById('copyButton'); 
+        const copyButtonIconContainer = document.getElementById('copyButtonIconContainer');
+        const copyButtonTextContainer = document.getElementById('copyButtonTextContainer');
         const translateButton = document.getElementById('translateButton');
         const translateButtonText = document.getElementById('translateButtonText');
+        const translateIcon = translateButton.querySelector('i');
         const loader = document.getElementById('loader');
         const errorMessageContainer = document.getElementById('errorMessage');
         const errorMessageTextElem = document.getElementById('errorMessageText');
-        const translateIcon = translateButton.querySelector('i');
-        const modelNameDisplay = document.getElementById('modelNameDisplay');
 
-        let originalCopyButtonIconHTML = copyButton.innerHTML; 
+        const initialCopyIconHTML = copyButtonIconContainer.innerHTML;
+        const initialCopyText = copyButtonTextContainer.textContent;
+        const outputPlaceholderText = "Translated text will appear here";
+
+        function hexToRgb(hex) {
+            if (!hex || typeof hex !== 'string' || hex.charAt(0) !== '#') return null;
+            const bigint = parseInt(hex.slice(1), 16);
+            if (isNaN(bigint)) return null;
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return `${r}, ${g}, ${b}`;
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const appBlueBaseHex = getComputedStyle(document.documentElement).getPropertyValue('--app-blue-base').trim();
+                if (appBlueBaseHex) {
+                    const appBlueBaseRgb = hexToRgb(appBlueBaseHex);
+                    if (appBlueBaseRgb) {
+                        document.documentElement.style.setProperty('--app-blue-base-rgb', appBlueBaseRgb);
+                    }
+                }
+            } catch (e) {
+                console.error("Could not set --app-blue-base-rgb variable:", e);
+            }
+        });
+
 
         const API_KEY = 'AIzaSyDSF270Y1VJf1fe4G8ZAuw7bOITbAlal74'; 
         const MODEL_NAME = 'gemini-2.0-flash';
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
         
-        if(modelNameDisplay) modelNameDisplay.textContent = MODEL_NAME;
 
-
-        function clearOutputArea() {
-            outputTextElem.textContent = '';
-            outputTextElem.style.color = '#202124'; 
-            copyButton.classList.add('hidden');
-            copyButton.innerHTML = originalCopyButtonIconHTML; 
+        function updateButtonDisabledStates() {
+            const isInputEmpty = inputTextElem.value.trim() === '';
+            translateButton.disabled = isInputEmpty;
+            clearInputButton.disabled = isInputEmpty;
+            
+            const outputContent = outputTextElem.textContent;
+            const isOutputPlaceholder = outputContent === outputPlaceholderText;
+            const isOutputEffectivelyEmpty = !outputContent || 
+                                          outputContent.trim() === '' || 
+                                          outputContent === 'Translating...' ||
+                                          isOutputPlaceholder;
+            setCopyButtonState(!isOutputEffectivelyEmpty);
         }
 
-        function clearError() { // Renamed from hideError
+
+        function setCopyButtonState(enabled) {
+            copyButton.disabled = !enabled;
+            if (!enabled) {
+                copyButtonIconContainer.innerHTML = initialCopyIconHTML;
+                copyButtonTextContainer.textContent = initialCopyText;
+                copyButton.classList.remove('is-copied');
+            }
+        }
+
+        function setOutputPlaceholder() {
+            outputTextElem.textContent = outputPlaceholderText;
+            outputTextElem.classList.add('is-placeholder');
+            outputTextElem.classList.remove('is-processing');
+            updateButtonDisabledStates();
+        }
+
+        function clearOutputArea() {
+            setOutputPlaceholder(); 
+        }
+
+        function clearError() { 
             errorMessageContainer.classList.add('hidden');
             errorMessageTextElem.textContent = '';
         }
 
-        function setOutputText(text) {
+        function setOutputText(text, isProcessingOrError = false) {
             outputTextElem.textContent = text;
-            // Set default text color, assuming it's valid translated text
-            outputTextElem.style.color = '#202124'; 
-
-            if (text && text.trim() !== '') {
-                copyButton.classList.remove('hidden');
-                copyButton.innerHTML = originalCopyButtonIconHTML; // Reset copy icon
+            
+            if (text === 'Translating...') {
+                outputTextElem.classList.add('is-placeholder', 'is-processing');
+            } else if (isProcessingOrError || text === outputPlaceholderText) {
+                outputTextElem.classList.add('is-placeholder');
+                outputTextElem.classList.remove('is-processing');
             } else {
-                copyButton.classList.add('hidden');
+                outputTextElem.classList.remove('is-placeholder', 'is-processing');
+            }
+            
+            const isValidOutput = text && text.trim() !== '' &&
+                                  text !== 'Translating...' &&
+                                  text !== outputPlaceholderText &&
+                                  !text.toLowerCase().includes("translation failed") &&
+                                  !text.toLowerCase().includes("translation blocked");
+
+            setCopyButtonState(isValidOutput); 
+            if (isValidOutput) { 
+                copyButtonIconContainer.innerHTML = initialCopyIconHTML;
+                copyButtonTextContainer.textContent = initialCopyText;
+                copyButton.classList.remove('is-copied');
             }
         }
         
         inputTextElem.addEventListener('input', () => {
+            updateButtonDisabledStates();
             if (inputTextElem.value.trim() === '') {
-                clearOutputArea();
+                clearOutputArea(); 
                 clearError(); 
             }
+        });
+
+        clearInputButton.addEventListener('click', () => {
+            inputTextElem.value = '';
+            inputTextElem.focus(); 
+            inputTextElem.dispatchEvent(new Event('input', { bubbles: true })); 
         });
 
         inputTextElem.addEventListener('keydown', (event) => {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault(); 
-                if (inputTextElem.value.trim() !== '' && !translateButton.disabled) { 
+                if (!translateButton.disabled) { 
                     translateButton.click();
                 }
             }
@@ -290,14 +484,28 @@
         document.addEventListener('keydown', (event) => {
             if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a') {
                 event.preventDefault(); 
-                if (inputTextElem) { 
-                    inputTextElem.focus();    
-                    inputTextElem.select();   
+                if (document.activeElement === inputTextElem || document.activeElement === outputTextElem ) {
+                    document.activeElement.select();
+                } else if (inputTextElem && inputTextElem.value.length > 0) { 
+                    inputTextElem.focus();
+                    inputTextElem.select();
                 }
             }
         });
+        
+        function setLoadingState(isLoading) {
+            if (isLoading) {
+                translateButton.disabled = true; 
+                translateButton.classList.add('is-loading'); 
+                loader.classList.remove('hidden');
+            } else {
+                translateButton.classList.remove('is-loading');
+                loader.classList.add('hidden');
+                updateButtonDisabledStates(); 
+            }
+        }
 
-        // --- CORE TRANSLATION LOGIC (User Provided and Adapted) ---
+
         async function handleTranslate() {
             const textToTranslate = inputTextElem.value.trim();
             const selectedLanguageRadio = document.querySelector('input[name="targetLanguage"]:checked');
@@ -308,24 +516,22 @@
             }
             const targetLanguage = selectedLanguageRadio.value;
 
-            if (!textToTranslate) {
+            if (!textToTranslate) { 
                 showError('Please enter some text to translate.');
                 inputTextElem.focus();
                 return;
             }
 
             setLoadingState(true);
-            clearError(); // Was hideError in user's code
+            clearError(); 
             
-            // Display "Translating..." message in output area
-            outputTextElem.textContent = 'Translating...';
-            outputTextElem.style.color = '#5f6368'; // Placeholder color
-            copyButton.classList.add('hidden'); // Ensure copy button is hidden during translation
-
+            setOutputText('Translating...', true); 
+            updateButtonDisabledStates(); 
+            
             const prompt = `You are a precise translation engine. Translate the following text into ${targetLanguage}. Output ONLY the translated text itself, without any introductory phrases, explanations, or markdown formatting.\n\nOriginal text:\n"${textToTranslate}"\n\nTranslated text in ${targetLanguage}:`;
 
             try {
-                const response = await fetch(API_URL, { // Used API_URL
+                const response = await fetch(API_URL, { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -337,20 +543,22 @@
 
                 if (!response.ok) {
                     let errorMsg = `API Error: ${response.status} ${response.statusText}`;
+                    let message = errorMsg; 
                     if (responseData && responseData.error && responseData.error.message) {
                         errorMsg = `API Error (${response.status}): ${responseData.error.message}`;
+                        message = responseData.error.message; 
                     }
-                    // More specific error messages from user's code
+                   
                     if (response.status === 400 && errorMsg.toLowerCase().includes("api key") && (errorMsg.toLowerCase().includes("not valid") || errorMsg.toLowerCase().includes("invalid"))) {
-                         errorMsg = `API Key Error: The provided API key is not valid, has expired, or is not authorized for this model. Please ensure you are using a correct and active API key. (Note: The key in this demonstration is likely inactive).`;
-                    } else if ((response.status === 404 || response.status === 500 || response.status === 400) && errorMsg.toLowerCase().includes("model") && (errorMsg.toLowerCase().includes("not found") || errorMsg.toLowerCase().includes("does not exist"))) {
-                        errorMsg = `Model Error: The model '${MODEL_NAME}' could not be found or is not accessible with the current API key. Please verify the model name and your API key permissions.`;
-                    } else if (message.includes("User location is not supported")) { // Added from previous robust handling
-                         message = "Location Not Supported: API access from your current location is not permitted for this model or API key. Try from a supported region.";
-                    } else if (response.status === 400 && (message.toLowerCase().includes("resource has been exhausted") || message.toLowerCase().includes("quota"))) { // Added from previous robust handling
-                         message = "Quota Exceeded: You have used your available API quota. Please check your usage limits in the Google Cloud Console or try again later.";
-                    } else if (response.status === 429) { // Added from previous robust handling
-                         message = "Rate Limit Exceeded: Too many requests. Please wait a moment and try again.";
+                         errorMsg = `API Key Error: The provided API key is not valid or has restrictions.`;
+                    } else if ((response.status === 404 || response.status === 500 || response.status === 400) && errorMsg.toLowerCase().includes("model")) {
+                        errorMsg = `Model Error: The model '${MODEL_NAME}' could not be found or is not accessible.`;
+                    } else if (message.includes("User location is not supported")) { 
+                         errorMsg = "Location Error: API access from your current location is not supported.";
+                    } else if (response.status === 400 && (message.toLowerCase().includes("resource has been exhausted") || message.toLowerCase().includes("quota"))) { 
+                         errorMsg = "Quota Error: You have exceeded your API quota.";
+                    } else if (response.status === 429) { 
+                         errorMsg = "Rate Limit Exceeded: Too many requests. Please wait and try again.";
                     }
                     throw new Error(errorMsg);
                 }
@@ -364,28 +572,28 @@
                     setOutputText(translatedText);
 
                 } else if (responseData.promptFeedback && responseData.promptFeedback.blockReason) {
-                    const reasonObj = responseData.promptFeedback.blockReason; // blockReason can be an object or just a string sometimes
+                    const reasonObj = responseData.promptFeedback.blockReason; 
                     const reason = (typeof reasonObj === 'object' && reasonObj.reason) ? reasonObj.reason : (reasonObj || 'Unknown');
                     let blockDetails = '';
                     if (responseData.promptFeedback.safetyRatings && responseData.promptFeedback.safetyRatings.length > 0) {
                         blockDetails = ` Safety issues detected: ${responseData.promptFeedback.safetyRatings.map(r => `${r.category.replace('HARM_CATEGORY_', '')} (${r.probability})`).join(', ')}.`;
                     }
-                    showError(`Translation blocked by API. Reason: ${reason}.${blockDetails} Please revise your input text.`);
-                    setOutputText(''); // Clear output area
+                    showError(`Translation blocked by API. Reason: ${reason}.${blockDetails}`);
+                    setOutputText('Translation blocked.', true); 
                 } else {
                     console.error('Unexpected API response structure:', responseData);
-                    showError('Failed to extract translation. The API response was not in the expected format. Please check the browser console for details.');
-                    setOutputText(''); // Clear output area
+                    showError('Failed to extract translation. API response format unexpected.');
+                    setOutputText('Translation failed.', true); 
                 }
 
             } catch (error) {
                 console.error('Translation process error:', error);
-                let detailedErrorMessage = error.message || 'An unexpected error occurred. Please try again.';
+                let detailedErrorMessage = error.message || 'An unexpected error occurred.';
                 if (error instanceof TypeError && error.message.toLowerCase().includes("failed to fetch")) {
-                     detailedErrorMessage = 'Network Error: Could not connect to the translation service. Please check your internet connection.';
+                     detailedErrorMessage = 'Network Error: Could not connect to the translation service.';
                 }
                 showError(detailedErrorMessage);
-                setOutputText(''); // Clear output area
+                setOutputText('Translation failed.', true); 
             } finally {
                 setLoadingState(false);
             }
@@ -394,51 +602,49 @@
         translateButton.addEventListener('click', handleTranslate);
 
         copyButton.addEventListener('click', async () => {
+            if (copyButton.disabled) return; 
+
             const textToCopy = outputTextElem.textContent;
-            if (!textToCopy || 
-                textToCopy === 'Translating...' || 
-                outputTextElem.style.color === 'rgb(217, 48, 37)' || 
-                outputTextElem.style.color === 'rgb(95, 99, 104)') {
+            if (!textToCopy || textToCopy === 'Translating...' || textToCopy === outputPlaceholderText || textToCopy.toLowerCase().includes("failed") || textToCopy.toLowerCase().includes("blocked")) {
                 return;
             }
+
             try {
                 await navigator.clipboard.writeText(textToCopy);
-                copyButton.innerHTML = '<i class="fas fa-check fa-fw text-base text-green-600"></i>';
+                copyButtonIconContainer.innerHTML = '<i class="fas fa-check"></i>';
+                copyButtonTextContainer.textContent = 'Copied';
+                copyButton.classList.add('is-copied');
+
                 setTimeout(() => {
-                    copyButton.innerHTML = originalCopyButtonIconHTML;
+                    copyButtonIconContainer.innerHTML = initialCopyIconHTML; 
+                    copyButtonTextContainer.textContent = initialCopyText;
+                    copyButton.classList.remove('is-copied');
+                    updateButtonDisabledStates(); 
                 }, 2000);
             } catch (err) {
                 console.error('Failed to copy text: ', err);
-                copyButton.innerHTML = '<i class="fas fa-times fa-fw text-base text-red-600"></i>';
+                copyButtonIconContainer.innerHTML = '<i class="fas fa-times text-red-500"></i>';
+                copyButtonTextContainer.textContent = 'Error';
+                copyButton.classList.remove('is-copied');
+
                 setTimeout(() => {
-                     copyButton.innerHTML = originalCopyButtonIconHTML; 
+                     copyButtonIconContainer.innerHTML = initialCopyIconHTML;
+                     copyButtonTextContainer.textContent = initialCopyText;
+                     updateButtonDisabledStates();
                 }, 2000);
             }
         });
 
-
-        function setLoadingState(isLoading) {
-            if (isLoading) {
-                translateButton.disabled = true;
-                translateButtonText.style.display = 'none'; 
-                if(translateIcon) translateIcon.style.display = 'none';
-                loader.classList.remove('hidden');
-                translateButton.classList.add('cursor-wait');
-            } else {
-                translateButton.disabled = false;
-                translateButtonText.style.display = 'inline';
-                if(translateIcon) translateIcon.style.display = 'inline-block';
-                loader.classList.add('hidden');
-                translateButton.classList.remove('cursor-wait');
-            }
-        }
-
-        function showError(message) { // This is the existing showError function
+        function showError(message) { 
             errorMessageTextElem.textContent = message;
             errorMessageContainer.classList.remove('hidden');
         }
 
-        clearOutputArea();
+        // Initial setup
+        setOutputPlaceholder(); 
+        updateButtonDisabledStates();
+
+
     </script>
 </body>
 </html>
