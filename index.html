@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini Text Translator - Google Style</title>
+    <title>Polyglot</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -170,7 +170,7 @@
 
         <div class="p-5 md:p-6 space-y-5">
             <div>
-                <label for="inputText" class="block text-xs font-medium text-gray-600 mb-1 uppercase tracking-wider">Enter text</label>
+                <label for="inputText" class="block text-xs font-medium text-gray-600 mb-1 uppercase tracking-wider">Enter text (Press Enter to translate, Shift+Enter for new line)</label>
                 <textarea id="inputText" rows="5" class="w-full text-area-common" placeholder="Type or paste text here..."></textarea>
             </div>
 
@@ -254,21 +254,40 @@
             errorMessageTextElem.textContent = '';
         }
         
-        // Sync input clear with output clear
         inputTextElem.addEventListener('input', () => {
             if (inputTextElem.value.trim() === '') {
                 clearOutputArea();
-                clearError(); // Also clear any errors when input is cleared
+                clearError(); 
             }
         });
 
-        translateButton.addEventListener('click', async () => {
+        inputTextElem.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault(); 
+                if (inputTextElem.value.trim() !== '' && !translateButton.disabled) { 
+                    translateButton.click();
+                }
+            }
+        });
+
+        // Global Ctrl+A / Cmd+A override to select text only in inputTextElem
+        document.addEventListener('keydown', (event) => {
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a') {
+                event.preventDefault(); // Prevent default select-all behavior for the entire page
+
+                if (inputTextElem) { // Ensure the input element exists
+                    inputTextElem.focus();    // Bring focus to the input field
+                    inputTextElem.select();   // Select all text within the input field
+                }
+            }
+        });
+
+
+        async function handleTranslation() {
             const textToTranslate = inputTextElem.value.trim();
             const selectedLanguageRadio = document.querySelector('input[name="targetLanguage"]:checked');
             
             clearError(); 
-            // Do not clear output area here if user wants to re-translate slightly modified input without losing previous output
-            // clearOutputArea(); // Let's keep previous output until new one arrives or input is cleared.
 
             if (!textToTranslate) {
                 showError('Please enter some text to translate.');
@@ -285,7 +304,7 @@
             setLoadingState(true);
             outputTextElem.textContent = 'Translating...';
             outputTextElem.style.color = '#5f6368';
-            copyButton.classList.add('hidden'); // Hide copy button during translation
+            copyButton.classList.add('hidden'); 
 
             let prompt;
             if (targetLanguage === 'English') {
@@ -356,7 +375,7 @@
                     outputTextElem.style.color = '#202124';
                     if (translatedText.trim()) {
                         copyButton.classList.remove('hidden');
-                        copyButton.innerHTML = originalCopyButtonIconHTML; // Ensure correct icon
+                        copyButton.innerHTML = originalCopyButtonIconHTML; 
                     }
 
                 } else if (responseBody.promptFeedback && responseBody.promptFeedback.blockReason) {
@@ -385,15 +404,17 @@
             } finally {
                 setLoadingState(false);
             }
-        });
+        }
+
+        translateButton.addEventListener('click', handleTranslation);
+
 
         copyButton.addEventListener('click', async () => {
             const textToCopy = outputTextElem.textContent;
-            // Check if there's actual translated content, not placeholder or error messages
             if (!textToCopy || 
                 textToCopy === 'Translating...' || 
-                outputTextElem.style.color === 'rgb(217, 48, 37)' /* #d93025 error red */ || 
-                outputTextElem.style.color === 'rgb(95, 99, 104)' /* #5f6368 placeholder gray */) {
+                outputTextElem.style.color === 'rgb(217, 48, 37)' || 
+                outputTextElem.style.color === 'rgb(95, 99, 104)') {
                 return;
             }
             try {
@@ -404,7 +425,6 @@
                 }, 2000);
             } catch (err) {
                 console.error('Failed to copy text: ', err);
-                const currentIcon = copyButton.innerHTML;
                 copyButton.innerHTML = '<i class="fas fa-times fa-fw text-base text-red-600"></i>';
                 setTimeout(() => {
                      copyButton.innerHTML = originalCopyButtonIconHTML; 
@@ -434,7 +454,7 @@
             errorMessageContainer.classList.remove('hidden');
         }
 
-        clearOutputArea(); // Initial clear for output area and copy button state
+        clearOutputArea();
     </script>
 </body>
 </html>
