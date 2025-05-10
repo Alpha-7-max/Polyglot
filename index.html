@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polyglot</title>
+    <title>Gemini Text Translator - Google Style</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -15,7 +15,6 @@
         .translator-container {
             background-color: #ffffff; /* White card */
             border-radius: 8px; /* Google's typical border-radius */
-            /* box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15); */ /* Shadow removed */
             border: 1px solid #dadce0; /* Border for definition */
         }
 
@@ -223,7 +222,7 @@
     </div>
 
     <footer class="text-center mt-6 mb-4">
-        <p class="text-xs text-gray-500">Powered by Google Gemini. Model: <span class="font-medium text-gray-600">gemini-2.0-flash</span>.</p>
+        <p class="text-xs text-gray-500">Powered by Google Gemini. Model: <span class="font-medium text-gray-600" id="modelNameDisplay">gemini-2.0-flash</span>.</p>
     </footer>
 
     <script>
@@ -236,11 +235,16 @@
         const errorMessageContainer = document.getElementById('errorMessage');
         const errorMessageTextElem = document.getElementById('errorMessageText');
         const translateIcon = translateButton.querySelector('i');
+        const modelNameDisplay = document.getElementById('modelNameDisplay');
+
         let originalCopyButtonIconHTML = copyButton.innerHTML; 
 
         const API_KEY = 'AIzaSyDSF270Y1VJf1fe4G8ZAuw7bOITbAlal74'; 
         const MODEL_NAME = 'gemini-2.0-flash';
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+        
+        if(modelNameDisplay) modelNameDisplay.textContent = MODEL_NAME;
+
 
         function clearOutputArea() {
             outputTextElem.textContent = '';
@@ -249,9 +253,22 @@
             copyButton.innerHTML = originalCopyButtonIconHTML; 
         }
 
-        function clearError() {
+        function clearError() { // Renamed from hideError
             errorMessageContainer.classList.add('hidden');
             errorMessageTextElem.textContent = '';
+        }
+
+        function setOutputText(text) {
+            outputTextElem.textContent = text;
+            // Set default text color, assuming it's valid translated text
+            outputTextElem.style.color = '#202124'; 
+
+            if (text && text.trim() !== '') {
+                copyButton.classList.remove('hidden');
+                copyButton.innerHTML = originalCopyButtonIconHTML; // Reset copy icon
+            } else {
+                copyButton.classList.add('hidden');
+            }
         }
         
         inputTextElem.addEventListener('input', () => {
@@ -270,144 +287,111 @@
             }
         });
 
-        // Global Ctrl+A / Cmd+A override to select text only in inputTextElem
         document.addEventListener('keydown', (event) => {
             if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a') {
-                event.preventDefault(); // Prevent default select-all behavior for the entire page
-
-                if (inputTextElem) { // Ensure the input element exists
-                    inputTextElem.focus();    // Bring focus to the input field
-                    inputTextElem.select();   // Select all text within the input field
+                event.preventDefault(); 
+                if (inputTextElem) { 
+                    inputTextElem.focus();    
+                    inputTextElem.select();   
                 }
             }
         });
 
-
-        async function handleTranslation() {
+        // --- CORE TRANSLATION LOGIC (User Provided and Adapted) ---
+        async function handleTranslate() {
             const textToTranslate = inputTextElem.value.trim();
             const selectedLanguageRadio = document.querySelector('input[name="targetLanguage"]:checked');
             
-            clearError(); 
+            if (!selectedLanguageRadio) {
+                showError('Please select a target language.'); 
+                return;
+            }
+            const targetLanguage = selectedLanguageRadio.value;
 
             if (!textToTranslate) {
                 showError('Please enter some text to translate.');
                 inputTextElem.focus();
                 return;
             }
-            if (!selectedLanguageRadio) { 
-                showError('Please select a target language.');
-                return;
-            }
 
-            const targetLanguage = selectedLanguageRadio.value;
-            
             setLoadingState(true);
+            clearError(); // Was hideError in user's code
+            
+            // Display "Translating..." message in output area
             outputTextElem.textContent = 'Translating...';
-            outputTextElem.style.color = '#5f6368';
-            copyButton.classList.add('hidden'); 
+            outputTextElem.style.color = '#5f6368'; // Placeholder color
+            copyButton.classList.add('hidden'); // Ensure copy button is hidden during translation
 
-            let prompt;
-            if (targetLanguage === 'English') {
-                prompt = `Translate the following text into fluent, natural-sounding English. Provide ONLY the translated text, without any introductory phrases (like "English:", "Translation:"), labels, or explanations: "${textToTranslate}"`;
-            } else if (targetLanguage === 'Roman Urdu') {
-                prompt = `Translate the following text into Roman Urdu (Urdu written using Latin/Roman script, for example, 'aap kaise hain?' for 'آپ کیسے ہیں؟' or 'shukriya' for 'شکریہ'). Provide ONLY the translated text, without any introductory phrases (like "Roman Urdu:", "Translation:"), labels, or explanations: "${textToTranslate}"`;
-            }
+            const prompt = `You are a precise translation engine. Translate the following text into ${targetLanguage}. Output ONLY the translated text itself, without any introductory phrases, explanations, or markdown formatting.\n\nOriginal text:\n"${textToTranslate}"\n\nTranslated text in ${targetLanguage}:`;
 
             try {
-                const response = await fetch(API_URL, {
+                const response = await fetch(API_URL, { // Used API_URL
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: prompt }]
-                        }],
-                        generationConfig: { 
-                            temperature: 0.4, 
-                            maxOutputTokens: 2048,
-                        },
-                        safetySettings: [
-                            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-                            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-                            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-                            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" }
-                        ]
-                    }),
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
                 });
 
-                const responseBody = await response.json();
+                const responseData = await response.json();
 
                 if (!response.ok) {
-                    console.error('API Error Response:', responseBody);
-                    let message = `API Error (${response.status}): ${response.statusText || 'Unknown error'}.`;
-                    if (responseBody.error && responseBody.error.message) {
-                        message = responseBody.error.message;
-                         if (message.includes("API key not valid")) {
-                             message = "Invalid API Key: The provided API key is not valid, has restrictions, or is not properly configured. Please check your API key.";
-                        } else if (message.includes("billing account")) {
-                             message = "Billing Issue: A problem occurred with the billing account associated with this project. Please verify your Google Cloud Console billing settings.";
-                        } else if (response.status === 404 && message.toLowerCase().includes("model")) {
-                            message = `Model Not Found: The model '${MODEL_NAME}' could not be found or is not accessible with your current API key. (Status: ${response.status})`;
-                        } else if (message.includes("User location is not supported")) {
-                             message = "Location Not Supported: API access from your current location is not permitted for this model or API key. Try from a supported region.";
-                        } else if (response.status === 400 && (message.toLowerCase().includes("resource has been exhausted") || message.toLowerCase().includes("quota"))) {
-                             message = "Quota Exceeded: You have used your available API quota. Please check your usage limits in the Google Cloud Console or try again later.";
-                        } else if (response.status === 429) {
-                             message = "Rate Limit Exceeded: Too many requests. Please wait a moment and try again.";
-                        } else {
-                            message = `API Error: ${message} (Status: ${response.status})`;
-                        }
+                    let errorMsg = `API Error: ${response.status} ${response.statusText}`;
+                    if (responseData && responseData.error && responseData.error.message) {
+                        errorMsg = `API Error (${response.status}): ${responseData.error.message}`;
                     }
-                    throw new Error(message);
+                    // More specific error messages from user's code
+                    if (response.status === 400 && errorMsg.toLowerCase().includes("api key") && (errorMsg.toLowerCase().includes("not valid") || errorMsg.toLowerCase().includes("invalid"))) {
+                         errorMsg = `API Key Error: The provided API key is not valid, has expired, or is not authorized for this model. Please ensure you are using a correct and active API key. (Note: The key in this demonstration is likely inactive).`;
+                    } else if ((response.status === 404 || response.status === 500 || response.status === 400) && errorMsg.toLowerCase().includes("model") && (errorMsg.toLowerCase().includes("not found") || errorMsg.toLowerCase().includes("does not exist"))) {
+                        errorMsg = `Model Error: The model '${MODEL_NAME}' could not be found or is not accessible with the current API key. Please verify the model name and your API key permissions.`;
+                    } else if (message.includes("User location is not supported")) { // Added from previous robust handling
+                         message = "Location Not Supported: API access from your current location is not permitted for this model or API key. Try from a supported region.";
+                    } else if (response.status === 400 && (message.toLowerCase().includes("resource has been exhausted") || message.toLowerCase().includes("quota"))) { // Added from previous robust handling
+                         message = "Quota Exceeded: You have used your available API quota. Please check your usage limits in the Google Cloud Console or try again later.";
+                    } else if (response.status === 429) { // Added from previous robust handling
+                         message = "Rate Limit Exceeded: Too many requests. Please wait a moment and try again.";
+                    }
+                    throw new Error(errorMsg);
                 }
                 
-                if (responseBody.candidates && responseBody.candidates.length > 0 &&
-                    responseBody.candidates[0].content && responseBody.candidates[0].content.parts &&
-                    responseBody.candidates[0].content.parts.length > 0 &&
-                    responseBody.candidates[0].content.parts[0].text) {
+                if (responseData.candidates && responseData.candidates.length > 0 &&
+                    responseData.candidates[0].content && responseData.candidates[0].content.parts &&
+                    responseData.candidates[0].content.parts.length > 0 &&
+                    typeof responseData.candidates[0].content.parts[0].text === 'string') {
                     
-                    let translatedText = responseBody.candidates[0].content.parts[0].text;
-                    translatedText = translatedText.replace(/^(English|Roman Urdu|Translation):?\s*/i, '').trim();
-                    translatedText = translatedText.replace(/^["“']|["”']$/g, '');
+                    const translatedText = responseData.candidates[0].content.parts[0].text.trim();
+                    setOutputText(translatedText);
 
-                    outputTextElem.textContent = translatedText;
-                    outputTextElem.style.color = '#202124';
-                    if (translatedText.trim()) {
-                        copyButton.classList.remove('hidden');
-                        copyButton.innerHTML = originalCopyButtonIconHTML; 
+                } else if (responseData.promptFeedback && responseData.promptFeedback.blockReason) {
+                    const reasonObj = responseData.promptFeedback.blockReason; // blockReason can be an object or just a string sometimes
+                    const reason = (typeof reasonObj === 'object' && reasonObj.reason) ? reasonObj.reason : (reasonObj || 'Unknown');
+                    let blockDetails = '';
+                    if (responseData.promptFeedback.safetyRatings && responseData.promptFeedback.safetyRatings.length > 0) {
+                        blockDetails = ` Safety issues detected: ${responseData.promptFeedback.safetyRatings.map(r => `${r.category.replace('HARM_CATEGORY_', '')} (${r.probability})`).join(', ')}.`;
                     }
-
-                } else if (responseBody.promptFeedback && responseBody.promptFeedback.blockReason) {
-                    let reason = responseBody.promptFeedback.blockReason;
-                    let safetyDetails = responseBody.promptFeedback.safetyRatings ? 
-                                        responseBody.promptFeedback.safetyRatings.map(r => `${r.category.replace('HARM_CATEGORY_', '')}: ${r.probability}`).join(', ') : '';
-                    showError(`Content Blocked: Translation was blocked due to safety policies (Reason: ${reason}). ${safetyDetails ? 'Details: ' + safetyDetails : ''}`);
-                    outputTextElem.textContent = "Translation blocked due to content safety.";
-                    outputTextElem.style.color = '#d93025';
+                    showError(`Translation blocked by API. Reason: ${reason}.${blockDetails} Please revise your input text.`);
+                    setOutputText(''); // Clear output area
                 } else {
-                    console.error('Unexpected API response structure:', responseBody);
-                    showError('Failed to parse translation. The API response might be empty or in an unexpected format. Check the browser console for details.');
-                    outputTextElem.textContent = "Translation parsing failed.";
-                    outputTextElem.style.color = '#d93025';
+                    console.error('Unexpected API response structure:', responseData);
+                    showError('Failed to extract translation. The API response was not in the expected format. Please check the browser console for details.');
+                    setOutputText(''); // Clear output area
                 }
 
             } catch (error) {
-                console.error('Translation Process Error:', error);
-                let displayMessage = error.message;
-                if (error instanceof TypeError && error.message.toLowerCase().includes('failed to fetch')) {
-                    displayMessage = 'Network Connection Error: Unable to connect to the translation service. Please check your internet connection and try again.';
+                console.error('Translation process error:', error);
+                let detailedErrorMessage = error.message || 'An unexpected error occurred. Please try again.';
+                if (error instanceof TypeError && error.message.toLowerCase().includes("failed to fetch")) {
+                     detailedErrorMessage = 'Network Error: Could not connect to the translation service. Please check your internet connection.';
                 }
-                showError(displayMessage);
-                outputTextElem.textContent = "Translation failed.";
-                outputTextElem.style.color = '#d93025';
+                showError(detailedErrorMessage);
+                setOutputText(''); // Clear output area
             } finally {
                 setLoadingState(false);
             }
         }
 
-        translateButton.addEventListener('click', handleTranslation);
-
+        translateButton.addEventListener('click', handleTranslate);
 
         copyButton.addEventListener('click', async () => {
             const textToCopy = outputTextElem.textContent;
@@ -449,7 +433,7 @@
             }
         }
 
-        function showError(message) {
+        function showError(message) { // This is the existing showError function
             errorMessageTextElem.textContent = message;
             errorMessageContainer.classList.remove('hidden');
         }
