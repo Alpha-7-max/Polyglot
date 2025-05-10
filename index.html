@@ -254,7 +254,7 @@
         }
         .clear-input-button:hover:not(:disabled) {
             background-color: var(--app-hover-bg-gray);
-            color: #dc2626; 
+            color: var(--app-blue-base); 
         }
         .clear-input-button:disabled {
             opacity: 0.5;
@@ -292,10 +292,17 @@
         <div class="translator-card w-full max-w-3xl mx-auto p-3 sm:p-6">
             <div class="space-y-6">
                 <div>
-                    <div class="flex justify-end items-center mb-2">
-                        <button id="clearInputButton" title="Clear input text" class="clear-input-button rounded-md text-gray-500 focus:outline-none font-medium">
-                            <i class="fas fa-times mr-1"></i>Clear
-                        </button>
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <button id="pasteButton" title="Paste from clipboard" class="clear-input-button rounded-md text-gray-400 focus:outline-none font-medium">
+                                <i class="fas fa-paste mr-1"></i>Paste
+                            </button>
+                        </div>
+                        <div>
+                            <button id="clearInputButton" title="Clear input text" class="clear-input-button rounded-md text-gray-500 focus:outline-none font-medium">
+                                <i class="fas fa-times mr-1"></i>Clear
+                            </button>
+                        </div>
                     </div>
                     <textarea id="inputText" rows="5" class="w-full input-textarea text-io-box resize-none rounded-md" placeholder="Type or paste text here..."></textarea>
                 </div>
@@ -364,6 +371,7 @@
         const inputTextElem = document.getElementById('inputText');
         const outputTextElem = document.getElementById('outputText');
         const clearInputButton = document.getElementById('clearInputButton');
+        const pasteButton = document.getElementById('pasteButton');
         const copyButton = document.getElementById('copyButton'); 
         const copyButtonIconContainer = document.getElementById('copyButtonIconContainer');
         const copyButtonTextContainer = document.getElementById('copyButtonTextContainer');
@@ -486,6 +494,17 @@
             inputTextElem.value = '';
             inputTextElem.focus(); 
             inputTextElem.dispatchEvent(new Event('input', { bubbles: true })); 
+        });
+
+        pasteButton.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                inputTextElem.value = text;
+                inputTextElem.focus();
+                inputTextElem.dispatchEvent(new Event('input', { bubbles: true }));
+            } catch (err) {
+                console.error('Failed to read clipboard:', err);
+            }
         });
 
         inputTextElem.addEventListener('keydown', (event) => {
