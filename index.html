@@ -32,10 +32,12 @@
             --app-purple-text-light: #6d28d9; 
             --app-purple-base-rgb: 79, 70, 229;
 
-            --lang-btn-bg-checked-dim: #5b21b6; 
-            --lang-btn-bg-checked-dim-rgb: 91, 33, 182; 
-            --lang-btn-shadow-checked: 0 1px 2px 0 rgba(var(--lang-btn-bg-checked-dim-rgb), 0.3);
-
+            --app-slate-100: #f1f5f9;
+            --app-slate-700: #334155;
+            --app-slate-200: #e2e8f0;
+            --app-blue-600: #2563eb;
+            --app-blue-500-shadow: rgba(59, 130, 246, 0.3);
+            --app-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 
             --selection-bg-purple: #d1c4e9;  
             --selection-text-purple: #311b92; 
@@ -46,7 +48,7 @@
 
         body {
             font-family: 'Roboto', 'Segoe UI', Arial, sans-serif; 
-            background-image: linear-gradient(to bottom right, #f3e8ff, #e0e7ff, #e0f2fe);
+            background-image: linear-gradient(to bottom right, #e0f2fe, #bfdbfe, #a5b4fc);
         }
 
         .page-container { 
@@ -64,16 +66,17 @@
         }
 
         ::selection {
-            background-color: var(--selection-bg-purple);
-            color: var(--selection-text-purple);
+            background-color: var(--app-blue-600);
+            color: var(--pure-white);
         }
         ::-moz-selection { 
-            background-color: var(--selection-bg-purple);
-            color: var(--selection-text-purple);
+            background-color: var(--app-blue-600);
+            color: var(--pure-white);
         }
 
         .translator-card { 
-            background-color: var(--pure-white);
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(1rem);
             border-radius: 0;
             border: none;
             width: 100%;
@@ -90,7 +93,7 @@
             border-radius: 6px;
             min-height: 180px; 
             padding: 1rem;    
-            color: #202124; 
+            color: #1f2937; 
         }
 
         .input-textarea {
@@ -100,12 +103,12 @@
             resize: none; 
         }
         .input-textarea:focus {
-            border-color: var(--app-purple-base); 
-            box-shadow: 0 0 0 1px var(--app-purple-base); 
+            border-color: var(--app-blue-600); 
+            box-shadow: 0 0 0 1px var(--app-blue-500-shadow); 
             outline: none;
         }
         .input-textarea::placeholder {
-            color: var(--placeholder-text-color);
+            color: #6b7280;
             font-size: 0.9375rem; 
         }
         
@@ -114,9 +117,10 @@
             font-size: 0.9375rem; 
             line-height: 1.65;
             resize: none; 
+            color: #374151; /* Medium-Dark Gray */
         }
         .output-box.is-placeholder-text { 
-            color: var(--placeholder-text-color); 
+            color: #6b7280; /* Medium Gray */ 
         }
         .output-box.is-processing { /* Styling for "Translating..." text state */
             background-color: var(--app-purple-super-light-bg); /* Example: subtle bg change */
@@ -182,25 +186,25 @@
             align-items: center;
             justify-content: center;
             padding: 0.5rem 1rem; 
-            border: 1px solid var(--app-purple-base); 
+            border: 1px solid var(--app-border-gray); 
             border-radius: 10px; 
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 0.875rem; 
             font-weight: 600; 
-            color: var(--app-purple-base); 
-            background-color: var(--pure-white); 
+            color: var(--app-slate-700); 
+            background-color: var(--app-slate-100); 
             line-height: 1.5;
-            box-shadow: none; 
+            box-shadow: var(--app-shadow-sm); 
         }
         .lang-option label:hover { 
-            background-color: var(--app-purple-super-light-bg); 
+            background-color: var(--app-slate-200); 
         }
         .lang-option input[type="radio"]:checked + label {
-            background-color: rgba(var(--app-purple-base-rgb), 0.75); 
-            border-color: rgba(var(--app-purple-base-rgb), 0.75);     
+            background-color: var(--app-blue-600); 
+            border-color: var(--app-blue-600);     
             color: var(--pure-white); 
-            box-shadow: var(--lang-btn-shadow-checked); 
+            box-shadow: var(--app-blue-500-shadow), var(--app-shadow-sm); 
         }
         .lang-option input[type="radio"]:focus-visible + label {
             outline: 2px solid var(--app-purple-focus-ring); 
@@ -208,31 +212,33 @@
         }
 
         .translate-action-button {
-            background-color: var(--app-purple-base); 
-            color: white;
+            background-image: linear-gradient(to right, #2563eb, #1d4ed8); /* bg-gradient-to-r from-blue-600 to-blue-700 */
+            color: #ffffff; /* text-white */
             font-weight: 500;
             padding: 0.75rem 1.75rem; 
             border-radius: 8px;
-            transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease; 
+            transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease, box-shadow 0.15s ease-in-out; 
             border: none;
             font-size: 0.9375rem; 
             position: relative; 
             overflow: hidden; 
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
         }
         .translate-action-button:hover:not(:disabled) { 
-            background-color: var(--app-purple-hover); 
+            background-image: linear-gradient(to right, #1d4ed8, #1e40af); /* hover:from-blue-700 hover:to-blue-800 */
             transform: translateY(-1px); 
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* hover:shadow-lg */
         }
         .translate-action-button:active:not(:disabled) { 
-             background-color: var(--app-purple-active); 
              transform: translateY(0px); 
         }
         .translate-action-button:focus-visible {
-            outline: 2px solid var(--app-purple-focus-ring); 
+            outline: 2px solid transparent; /* Remove default outline */
             outline-offset: 2px;
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #60a5fa; /* focus:ring-blue-400 focus:ring-opacity-75 */
         }
         .translate-action-button:disabled {
-            background-color: var(--app-purple-base); 
+            background-image: linear-gradient(to right, #2563eb, #1d4ed8); /* Keep gradient but reduce opacity */
             color: white;
             cursor: not-allowed;
             opacity: 0.5; 
@@ -246,6 +252,11 @@
             50% { opacity: 0.7; } 
         }
         .translate-action-button .fa-circle-notch.fa-spin { }
+
+        /* Custom glow effect */
+        .translate-action-button:hover:not(:disabled) {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.06);
+        }
 
 
         .error-banner { 
@@ -261,33 +272,56 @@
         .error-banner p { color: #5c3b3a; }
         
         #copyButton {
-            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.15s ease-in-out; 
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out, opacity 0.2s ease-in-out, transform 0.1s ease, box-shadow 0.15s ease-in-out; 
             font-size: 0.875rem; 
             padding: 0.25rem 0.625rem; 
-            border: 1px solid var(--app-border-gray); 
+            border: none; /* Remove border */
             outline: none !important; 
+            background-color: #475569; /* bg-slate-600 */
+            color: #ffffff; /* text-white */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
         }
         #copyButton:hover:not(:disabled) { 
-            background-color: var(--app-purple-super-light-bg); 
-            border-color: var(--app-purple-base); 
-            color: var(--app-purple-base); 
+            background-color: #334155; /* hover:bg-slate-700 */
+            color: #ffffff; /* text-white */
+            transform: translateY(-1px); /* Slight lift on hover */
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* hover:shadow-lg */
+        }
+        #copyButton:active:not(:disabled) { 
+             transform: translateY(0px); /* Press down on active */
+        }
+        #copyButton:focus-visible { 
+             outline: 2px solid transparent; /* Remove default outline */
+             outline-offset: 2px;
+             box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #94a3b8; /* focus:ring-slate-400 focus:ring-opacity-75 */
+        }
+        /* Custom glow effect for normal state */
+        #copyButton:hover:not(:disabled) { 
+            box-shadow: 0 0 15px rgba(71, 85, 105, 0.3), 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.06); /* btn-secondary-glow:hover */
         }
         #copyButton:disabled { 
             opacity: 0.5; 
             cursor: not-allowed; 
         }
-        #copyButton:focus-visible { 
-             outline: 2px solid var(--app-purple-focus-ring) !important; 
-             outline-offset: 1px !important;
-             border-color: var(--app-purple-base); 
-        }
         #copyButton.is-copied {
-            border-color: var(--copy-button-border-copied); 
-            background-color: var(--app-purple-super-light-bg); 
-            color: var(--app-purple-text-light); 
+            background-color: #22c55e; /* bg-green-500 */
+            border-color: transparent; /* Remove border */
+            color: #ffffff; /* text-white */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
         }
-        #copyButton.is-copied #copyButtonIconContainer i {
-            color: var(--app-purple-text-light);
+         #copyButton.is-copied:hover:not(:disabled) {
+            background-color: #16a34a; /* hover:bg-green-600 */
+            color: #ffffff; /* text-white */
+            transform: translateY(-1px); /* Slight lift on hover */
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* hover:shadow-lg */
+        }
+        #copyButton.is-copied:active:not(:disabled) { 
+             transform: translateY(0px); /* Press down on active */
+        }
+        #copyButton.is-copied:focus-visible { 
+             outline: 2px solid transparent; /* Remove default outline */
+             outline-offset: 2px;
+             box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #4ade80; /* focus:ring-green-400 focus:ring-opacity-75 */
         }
         #copyButtonIconContainer i { 
             font-size: 0.875rem; 
@@ -295,8 +329,11 @@
             vertical-align: middle; 
             transition: color 0.15s ease-in-out; 
         }
-        #copyButton:hover:not(:disabled) #copyButtonIconContainer i {
-            color: var(--app-purple-base); 
+        /* Icon color is white in all states as per text color */
+        #copyButton:hover:not(:disabled) #copyButtonIconContainer i,
+        #copyButton.is-copied #copyButtonIconContainer i,
+        #copyButton.is-copied:hover:not(:disabled) #copyButtonIconContainer i {
+            color: #ffffff; 
         }
 
         .clear-input-button { 
@@ -305,8 +342,8 @@
             padding: 0.25rem 0.5rem; 
         }
         .clear-input-button:hover:not(:disabled) { 
-            background-color: var(--app-purple-super-light-bg); 
-            color: var(--app-purple-base); 
+            background-color: var(--app-slate-200); 
+            color: var(--app-blue-600); 
         }
         .clear-input-button:focus-visible { 
             outline: 1px solid var(--app-purple-focus-ring);
@@ -323,7 +360,7 @@
             font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif; 
             font-size: 2.25rem; 
             font-weight: 800;   
-            color: var(--heading-text-color); 
+            color: #1e40af; /* Tailwind's Blue 800 */ 
             line-height: 1.2;
             text-align: center;
             margin-bottom: 2rem; 
@@ -334,18 +371,18 @@
              .page-main-title .logo-icon { font-size: 2.5rem; }
         }
         .page-main-title .logo-icon {
-            color: var(--spark-title-indigo); 
+            color: #facc15; /* Tailwind's Yellow 400 */ 
             margin-right: 0.75rem; 
             font-size: 2.25rem; 
             vertical-align: middle;
             display: inline-block; 
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease; 
         }
-        .page-main-title:hover .logo-icon { 
+        .page-main-title:hover .logo-icon {
             transform: rotate(-20deg) scale(1.15); 
-            color: var(--spark-icon-hover-color); 
+            color: #fde047; /* Tailwind's Yellow 300 */ 
         }
-        .text-indigo-500-spark { color: var(--spark-title-indigo); }
+        .text-indigo-500-spark { color: #2563eb; /* Tailwind's Blue 600 */
 
     
 
@@ -777,10 +814,7 @@
                 await navigator.clipboard.writeText(textToCopy);
                 
                 copyButtonIconContainer.innerHTML = initialCopyIconHTML; 
-                copyButtonIconContainer.querySelector('i').style.color = 'var(--app-purple-text-light)'; 
-
                 copyButtonTextContainer.textContent = 'Copied!';
-                copyButtonTextContainer.style.color = 'var(--app-purple-text-light)'; 
                 copyButton.classList.add('is-copied');
 
                 setTimeout(() => {
