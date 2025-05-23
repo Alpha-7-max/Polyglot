@@ -66,11 +66,11 @@
         }
 
         ::selection {
-            background-color: #3b82f6;
+            background-color: var(--app-blue-600);
             color: var(--pure-white);
         }
         ::-moz-selection { 
-            background-color: #3b82f6;
+            background-color: var(--app-blue-600);
             color: var(--pure-white);
         }
 
@@ -103,7 +103,7 @@
             resize: none; 
         }
         .input-textarea:focus {
-            border-color: #3b82f6; 
+            border-color: var(--app-blue-600); 
             box-shadow: 0 0 0 1px var(--app-blue-500-shadow); 
             outline: none;
         }
@@ -201,8 +201,8 @@
             background-color: var(--app-slate-200); 
         }
         .lang-option input[type="radio"]:checked + label {
-            background-color: #3b82f6; 
-            border-color: #3b82f6;     
+            background-color: var(--app-blue-600); 
+            border-color: var(--app-blue-600);     
             color: var(--pure-white); 
             box-shadow: var(--app-blue-500-shadow), var(--app-shadow-sm); 
         }
@@ -212,12 +212,13 @@
         }
 
         .translate-action-button {
-            background-color: #3b82f6;
+            background-image: linear-gradient(to right, #1d4ed8, #1e40af);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
             color: #ffffff;
             font-weight: 500;
             padding: 0.75rem 1.75rem;
             border-radius: 8px;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.2s ease, transform 0.1s ease;
             border: none;
             font-size: 0.9375rem;
             position: relative;
@@ -232,7 +233,7 @@
             box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #60a5fa;
         }
         .translate-action-button:disabled {
-            background-color: #60a5fa;
+            background-image: linear-gradient(to right, #2563eb, #1d4ed8);
             color: white;
             cursor: not-allowed;
             opacity: 0.5;
@@ -249,7 +250,7 @@
 
             /* Custom glow effect */
             .translate-action-button:hover:not(:disabled) {
-                opacity: 0.9;
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.06);
             }
 
 
@@ -298,13 +299,13 @@
                 cursor: not-allowed; 
             }
             #copyButton.is-copied {
-                background-color: #60a5fa; /* bg-green-500 */
+                background-color: #22c55e; /* bg-green-500 */
                 border-color: transparent; /* Remove border */
                 color: #ffffff; /* text-white */
                 box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
             }
              #copyButton.is-copied:hover:not(:disabled) {
-                background-color: #60a5fa; /* hover:bg-blue-400 */
+                background-color: #16a34a; /* hover:bg-green-600 */
                 color: #ffffff; /* text-white */
                 transform: translateY(-1px); /* Slight lift on hover */
                 box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* hover:shadow-lg */
@@ -422,7 +423,7 @@
                     </div>
                     
                     <button id="translateButton" class="translate-action-button w-full sm:w-auto flex items-center justify-center mt-3 sm:mt-0 self-stretch sm:self-center">
-                        <i id="translateButtonIcon" class="fas fa-exchange-alt mr-2 opacity-90"></i> 
+                        <i id="translateButtonIcon" class="fas fa-language mr-2 opacity-90"></i> 
                         <span id="translateButtonText">Translate</span>
                     </button>
                 </div>
