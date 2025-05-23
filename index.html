@@ -66,11 +66,11 @@
         }
 
         ::selection {
-            background-color: var(--app-blue-600);
+            background-color: #3b82f6;
             color: var(--pure-white);
         }
         ::-moz-selection { 
-            background-color: var(--app-blue-600);
+            background-color: #3b82f6;
             color: var(--pure-white);
         }
 
@@ -103,7 +103,7 @@
             resize: none; 
         }
         .input-textarea:focus {
-            border-color: var(--app-blue-600); 
+            border-color: #3b82f6; 
             box-shadow: 0 0 0 1px var(--app-blue-500-shadow); 
             outline: none;
         }
@@ -201,8 +201,8 @@
             background-color: var(--app-slate-200); 
         }
         .lang-option input[type="radio"]:checked + label {
-            background-color: var(--app-blue-600); 
-            border-color: var(--app-blue-600);     
+            background-color: #3b82f6; 
+            border-color: #3b82f6;     
             color: var(--pure-white); 
             box-shadow: var(--app-blue-500-shadow), var(--app-shadow-sm); 
         }
@@ -212,7 +212,7 @@
         }
 
         .translate-action-button {
-            background-image: linear-gradient(to right, #1d4ed8, #1e40af);
+            background-color: #3b82f6;
             color: #ffffff;
             font-weight: 500;
             padding: 0.75rem 1.75rem;
@@ -232,7 +232,7 @@
             box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #60a5fa;
         }
         .translate-action-button:disabled {
-            background-image: linear-gradient(to right, #2563eb, #1d4ed8);
+            background-color: #60a5fa;
             color: white;
             cursor: not-allowed;
             opacity: 0.5;
@@ -298,13 +298,13 @@
                 cursor: not-allowed; 
             }
             #copyButton.is-copied {
-                background-color: #22c55e; /* bg-green-500 */
+                background-color: #60a5fa; /* bg-green-500 */
                 border-color: transparent; /* Remove border */
                 color: #ffffff; /* text-white */
                 box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
             }
              #copyButton.is-copied:hover:not(:disabled) {
-                background-color: #16a34a; /* hover:bg-green-600 */
+                background-color: #60a5fa; /* hover:bg-blue-400 */
                 color: #ffffff; /* text-white */
                 transform: translateY(-1px); /* Slight lift on hover */
                 box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* hover:shadow-lg */
